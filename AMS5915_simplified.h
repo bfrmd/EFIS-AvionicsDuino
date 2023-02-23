@@ -1,5 +1,5 @@
-// Cette classe est copiée-collée à partir de la bibliothèque AMS5915 de Brian R Taylor (https://github.com/bolderflight/AMS5915-arduino)
-// en l'adaptant pour un usage exclusif des capteurs AMS5915/1500-A et AMS5915/0050-D
+// Cette classe est adaptée à partir de la bibliothèque AMS5915 de Brian R Taylor (https://github.com/bolderflight/AMS5915-arduino)
+// pour un usage exclusif des capteurs AMS5915/1500-A et AMS5915/0050-D
 
 #ifndef AMS5915_simplified_h
 #define AMS5915_simplified_h
