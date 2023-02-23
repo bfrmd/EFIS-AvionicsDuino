@@ -2,8 +2,8 @@
 //                         Paramètres généraux de la bibiothèque HorizArt
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  //                                                 HorizArtParamGen.h
-  //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//                                                 HorizArtParamGen.h
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 HorizArtParamGen.h is part of EFIS_Avionicsduino_V2.2
 EFIS_Avionicsduino_V2.2 is free software  
@@ -30,6 +30,7 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
+
  *****************************************************************************************************************************/
 #ifndef HORIZART_PARAMGEN_H
 #define HORIZART_PARAMGEN_H
