@@ -5,7 +5,9 @@
   
 HorizArt.cpp is part of EFIS_Avionicsduino_V2.2
 EFIS_Avionicsduino_V2.2 is free software    
+
 MIT License (MIT)
+
 Copyright (c) 2023 AvionicsDuino - benjamin.fremond@avionicsduino.com
 Contributors : Benjamin Frémond - Gabriel Consigny - Michel Riazuelo
 
