@@ -376,11 +376,11 @@ void setup()
   tft.setCursor(151, 8); 
   tft.setFont(Arial_24_Bold); 
   tft.setTextColor(RA8875_WHITE); 
-  tft.println("EFIS-DUINO v 2.1");
+  tft.println("EFIS-DUINO v 2.2");
   tft.setCursor(150, 7); 
   tft.setFont(Arial_24_Bold); 
   tft.setTextColor(RA8875_BLACK); 
-  tft.println("EFIS-DUINO v 2.1");
+  tft.println("EFIS-DUINO v 2.2");
   tft.setFontDefault();
   tft.setFontScale (0);
   delay(199);
