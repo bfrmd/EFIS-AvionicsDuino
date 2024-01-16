@@ -758,8 +758,8 @@ void loop()
   // ----------------------- calcul des vitesses de l'avion, résultat dans l'unité sélectionnée par l'utilisateur --------------------------------------------
   if (differentialPressure > 4.5)
   {
-    indicatedAirSpeed = int((sqrtf(21.159144 * differentialPressure) / speedConversionFactor) + 0.5);
-    trueAirSpeed = int((84.9528 * sqrtf(differentialPressure * (273.15 + oat) / pressure) / speedConversionFactor) + 0.5);
+    indicatedAirSpeed = int((sqrtf(21.159183 * differentialPressure) / speedConversionFactor) + 0.5);
+    trueAirSpeed = int((86.257392 * sqrtf(differentialPressure * (273.15 + oat) / pressure) / speedConversionFactor) + 0.5);
   }
   else 
   {
