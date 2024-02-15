@@ -768,7 +768,7 @@ void loop()
   }
 
   // ----------------------- calcul direction et vitesse du vent (nécessite un magnétomètre PARFAITEMENT calibré !!!) --------------------------------------------
-  Serial.print("groundSpeedGNSS : ");Serial.print(groundSpeedGNSS);Serial.print("       trk : ");Serial.print(trk); Serial.print("       magneticHeading + magDev : ");Serial.print(magneticHeading + magDev);Serial.print("       trueAirSpeed : ");Serial.println(trueAirSpeed);
+  //Serial.print("groundSpeedGNSS : ");Serial.print(groundSpeedGNSS);Serial.print("       trk : ");Serial.print(trk); Serial.print("       magneticHeading + magDev : ");Serial.print(magneticHeading + magDev);Serial.print("       trueAirSpeed : ");Serial.println(trueAirSpeed);
   float GSE = sin(PI / 180 * trk) * groundSpeedGNSS; // groundSpeedGNSS est exprimée en Km/h
   float GSN = cos(PI / 180 * trk) * groundSpeedGNSS;
   float TASE = sin(PI / 180 * (magneticHeading + magDev)) * trueAirSpeed;
