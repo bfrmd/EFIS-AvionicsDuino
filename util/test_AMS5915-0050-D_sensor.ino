@@ -1,3 +1,6 @@
+// Software utility to check the output from the AMS5915-0050-D sensor for any differential pressure between 0 and 50 mbar. 
+// Results in counts and Pa are displayed on the IDE serial monitor. See AMS5915 datasheet for further information.
+
 #include "Wire.h"
 float diffPressure;
 float previousFilteredDiffPressure;
@@ -18,7 +21,7 @@ uint16_t counter = 0;
 void setup() 
 {
   Serial.begin(9600);
-  Wire1.begin();                             // Adjust Wire (here and below) if necessary : Wire, Wire1, Wire2...
+  Wire1.begin();                             // Adjust Wire (here and below) if necessary: Wire, Wire1, Wire2...
   Wire1.setClock(400000);                    // i2c bus frequency
  for (size_t i=0; i < _maxAttempts; i++)     // checking to see if we can talk with the sensor
   {
