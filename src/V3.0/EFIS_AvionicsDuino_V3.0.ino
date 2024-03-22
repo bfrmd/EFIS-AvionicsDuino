@@ -120,8 +120,8 @@ using namespace TeensyTimerTool;
 // --------------------------------------------------------------------------------------------------------------------------------------------------------------
 RA8875 tft = RA8875(RA8875_CS1, 255, RA8875_MOSI1, RA8875_SCLK1, RA8875_MISO1); // Crée l'objet RA8875 "tft", de classe RA8875, initialisé dans le setup
 OneWire  ds(2);  
-AMS5915_simplified AMS5915_050D(Wire1, 0x28, AMS5915_simplified::AMS5915_0050_D); 
-AMS5915_simplified AMS5915_1500A(Wire, 0x28, AMS5915_simplified::AMS5915_1500_A); 
+AMS5915_simplified AMS5915_050D(Wire, 0x28, AMS5915_simplified::AMS5915_0050_D); 
+AMS5915_simplified AMS5915_1500A(Wire1, 0x28, AMS5915_simplified::AMS5915_1500_A); 
 HorizArt Horizon(&tft); 
 QuadEncoder encoder(1, 36, 37, 1);  // Canal 1, Phase A (pin36), PhaseB(pin37), pullups nécessaire avec l'encodeur GrayHill(1.
 FlexCAN_T4<CAN3, RX_SIZE_256, TX_SIZE_16> CAN_Module_EFIS;
