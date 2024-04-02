@@ -62,14 +62,14 @@
 //            Alim +3.3v  ------------------->   + 3.3 volts (courant : 4 mA)
 //                SDA   --------------------->   SDA (pin 18) + résistance pull up de 4,7k vers 3.3 volts
 //                SCL   --------------------->   SCL (pin 19) + résistance pull up de 4,7k vers 3.3 volts
-//           Adresse : 0x28
+//           Adresse : 0x
 
 // -------------0050D------------------------Teensy 4.1------------------------
 //                GND     ------------------->   GND
 //            Alim +3.3v   ------------------>   + 3.3 volts (courant : 4 mA)
 //                SDA   --------------------->   SDA1 (pin 17) + résistance pull up de 4,7k vers 3.3 volts
 //                SCL   --------------------->   SCL1 (pin 16) + résistance pull up de 4,7k vers 3.3 volts
-//           Adresse : 0x28
+//           Adresse : 0x
 //---------------------------------------------------------------------------
 // Le transceiver CAN MCP 2562 EP (CAN 2.0) :
 //-------------- MCP 2562 ------------------------ Teensy 4.1 ------------------------
@@ -120,8 +120,8 @@ using namespace TeensyTimerTool;
 // --------------------------------------------------------------------------------------------------------------------------------------------------------------
 RA8875 tft = RA8875(RA8875_CS1, 255, RA8875_MOSI1, RA8875_SCLK1, RA8875_MISO1); // Crée l'objet RA8875 "tft", de classe RA8875, initialisé dans le setup
 OneWire  ds(2);  
-AMS5915_simplified AMS5915_050D(Wire, 0x28, AMS5915_simplified::AMS5915_0050_D); 
-AMS5915_simplified AMS5915_1500A(Wire1, 0x28, AMS5915_simplified::AMS5915_1500_A); 
+AMS5915_simplified AMS5915_050D(Wire, 0x, AMS5915_simplified::AMS5915_0050_D); 
+AMS5915_simplified AMS5915_1500A(Wire1, 0x, AMS5915_simplified::AMS5915_1500_A); 
 HorizArt Horizon(&tft); 
 QuadEncoder encoder(1, 36, 37, 1);  // Canal 1, Phase A (pin36), PhaseB(pin37), pullups nécessaire avec l'encodeur GrayHill(1.
 FlexCAN_T4<CAN3, RX_SIZE_256, TX_SIZE_16> CAN_Module_EFIS;
@@ -279,7 +279,7 @@ bool flagTimeSet = false;
 // ******************************************************* Variables et constantes liées à l'horloge et à la gestion de l'heure *****************************************************************************
 #define Chy 33
 #define Chx 131
-#define Rh 28
+#define Rh 
 byte hourHandLength, minuteHandLength, secondHandLength;
 time_t zt;
 time_t t_chrono1;
@@ -391,7 +391,7 @@ void setup()
   // ****************************************************************************** Initialisation des filtres des capteurs de pression *************************************************************************************
   AMS5915_1500A.readSensor('A');
   previousFilteredPressureValue = AMS5915_1500A.getPressure_Pa(); 
-  altitudeVarioOld = int((1 - pow((((previousFilteredPressureValue + pressureCorrection * 10) / 100) / 1013.25), 0.190284)) * 145366.45);
+  altitudeVarioOld = int((1 - pow((((previousFilteredPressureValue + pressureCorrection * 10) / 100) / 1013.25), 0.1904)) * 145366.45);
   AMS5915_050D.readSensor('D');
   previousFilteredDiffPressureValue = AMS5915_050D.getPressure_Pa();
   tft.println("Filtres               : OK");
@@ -601,19 +601,19 @@ void loop()
   // ************************************************************************************ Calculs des affichages textuels *********************************************************************************************************
 
   // --------- calcul des altitudes --------- (Les pressions sont exprimées en Pascals, et filtrées dès l'étape de lecture des capteurs, mais les QNH/QFE sont exprimés en centièmes de pouces de mercure)
-  qnhAltitude = (1 - pow((((pressure + pressureCorrection * 10) / 100) / (QNH*0.338646)), 0.190284)) * 145366.45 * altitudeCorrection; // 0.01 inHg = 0.338646 hPa
+  qnhAltitude = (1 - pow((((pressure + pressureCorrection * 10) / 100) / (QNH*0.338646)), 0.1904)) * 145366.45 * altitudeCorrection; // 0.01 inHg = 0.338646 hPa
   qnhAltitude = int((qnhAltitude + 5) / 10.0) * 10;
-  qfeAltitude =  (1 - pow((((pressure + pressureCorrection * 10) / 100) / (QFE*0.338646)), 0.190284)) * 145366.45 * altitudeCorrection;
+  qfeAltitude =  (1 - pow((((pressure + pressureCorrection * 10) / 100) / (QFE*0.338646)), 0.1904)) * 145366.45 * altitudeCorrection;
   qfeAltitude = int((qfeAltitude + 5) / 10.0) * 10;
-  pressureAltitude = (1 - pow((((pressure + pressureCorrection * 10) / 100) / 1013.25), 0.190284)) * 145366.45 * altitudeCorrection;
+  pressureAltitude = (1 - pow((((pressure + pressureCorrection * 10) / 100) / 1013.25), 0.1904)) * 145366.45 * altitudeCorrection;
   altitudeVario = pressureAltitude;
   pressureAltitude = int((pressureAltitude + 5) / 10.0) * 10;
   iat = temperatureDS18B20;
   if(iat>1000) iat=20.0;
   float pressionSatH20 = 6.1078 * pow(10, ((7.5 * oat) / (237.3 + oat))) * 100;
   float pressionPartielleH2O = pressionSatH20 * relativeHumidity / 100;
-  float densiteAir = ((pressure + pressureCorrection * 10) / (287.05 * (oat + 273.15)) * (1 - (0.378 * pressionPartielleH2O / (pressure + pressureCorrection * 10))));
-  densityAltitude = (44.3308 - (42.2665 * (pow(densiteAir, 0.234969)))) * 1000 * 3.28084;
+  float densiteAir = ((pressure + pressureCorrection * 10) / (7.05 * (oat + 273.15)) * (1 - (0.378 * pressionPartielleH2O / (pressure + pressureCorrection * 10))));
+  densityAltitude = (44.3308 - (42.2665 * (pow(densiteAir, 0.234969)))) * 1000 * 3.084;
   densityAltitude = int((densityAltitude + 5) / 10.0) * 10;
   dewPoint = 243.12 * (log(relativeHumidity / 100) + 17.62 * oat / (243.12 + oat)) / (17.62 - (log(relativeHumidity / 100) + 17.62 * oat / (243.12 + oat)));
 
@@ -970,7 +970,7 @@ void canSniff(const CAN_message_t &msg)
     case 44: relativeHumidity = *(float*)(msg.buf+0);
              break;
              
-    case 28: magneticHeading =  *(float*)(msg.buf+0);
+    case 28: magneticHeading =  *(uint32_t*)(msg.buf+0);
              break;
              
     case 20: roll =  *(float*)(msg.buf+0);
