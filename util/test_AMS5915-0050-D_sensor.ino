@@ -21,8 +21,8 @@ uint16_t counter = 0;
 void setup() 
 {
   Serial.begin(9600);
-  Wire1.begin();                             // Adjust Wire (here and below) if necessary: Wire, Wire1, Wire2...
-  Wire1.setClock(400000);                    // i2c bus frequency
+  Wire.begin();                             // Adjust Wire (here and below) if necessary: Wire, Wire1, Wire2...
+  Wire.setClock(400000);                    // i2c bus frequency
  for (size_t i=0; i < _maxAttempts; i++)     // checking to see if we can talk with the sensor
   {
     statusCapteur = readSensorCounts(&_pressureCounts,&_temperatureCounts);
@@ -62,13 +62,13 @@ int readSensorUnits()  // reads data from the sensor and returns values in units
 
 int readSensorCounts(uint16_t * pressureCounts,uint16_t * temperatureCounts)                          // reads pressure and temperature and returns values in counts
 { 
-  numBytes = Wire1.requestFrom(0x28,sizeof(bufferI2C));                                               // read from sensor. Adjust I2C address if necessary
+  numBytes = Wire.requestFrom(0x28,sizeof(bufferI2C));                                               // read from sensor. Adjust I2C address if necessary
   if (numBytes == sizeof(bufferI2C))                                                                  // put the data in buffer
   {
-    bufferI2C[0] = Wire1.read(); 
-    bufferI2C[1] = Wire1.read();
-    bufferI2C[2] = Wire1.read();
-    bufferI2C[3] = Wire1.read();
+    bufferI2C[0] = Wire.read(); 
+    bufferI2C[1] = Wire.read();
+    bufferI2C[2] = Wire.read();
+    bufferI2C[3] = Wire.read();
     *pressureCounts = (((uint16_t) (bufferI2C[0]&0x3F)) <<8) + (((uint16_t) bufferI2C[1]));            // assemble into a uint16_t
     *temperatureCounts = (((uint16_t) (bufferI2C[2])) <<3) + (((uint16_t) bufferI2C[3]&0xE0)>>5);
     accumulator = accumulator + *pressureCounts;
