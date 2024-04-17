@@ -29,7 +29,7 @@ int AMS5915_simplified::readSensor(char letter)  // reads data from the sensor
   switch (letter)
   {
     case 'A' :  digOutPmin = 1638; break;
-    case 'D' : digOutPmin = 1569; break; // le capteur différentiel doit avoir un problème d'étalonnage en usine, la valeur pour une pression différentielle nulle devrait être 1638, hors elle est à 1569
+    case 'D' : digOutPmin = 1569; break; // le capteur utilisé présente une erreur de zéro, la valeur pour une pression différentielle nulle devrait être 1638, hors elle est à 1569
   }
 
   _status = readBytes(&_pressureCounts, &_temperatureCounts);                                                                                                 // get pressure and temperature counts off transducer
