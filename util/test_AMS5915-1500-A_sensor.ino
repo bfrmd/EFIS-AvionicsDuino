@@ -1,0 +1,92 @@
+// Software utility to check the output from the AMS5915-1500-A sensor for any absolute pressure at or below the current atmospheric pressure. 
+// Results in counts and Pa are displayed on the IDE serial monitor. See AMS5915 datasheet for further information.
+
+#include "Wire.h"
+float absolutePressure, previousFilteredAbsolutePressure = 101300.0;
+float filteredPressureCount, previousFilteredPressureCount;
+float Temp_C;
+uint8_t bufferI2C[4];               // buffer for I2C data
+size_t numBytes;                    // number of bytes received from I2C
+const size_t _maxAttempts = 10;     // maximum number of attempts to talk to sensor
+int statusCapteur;                  // track success of reading from sensor
+uint16_t _pressureCounts;           // pressure digital output, counts
+uint16_t _temperatureCounts;        // temperature digital output, counts
+int _pMin=0, _pMax=1500;            // min and max pressure, millibar
+uint16_t minOutputCount = 1638;     // at specified minimum pressure (i.e.  0 millibar ) see AMS5915-1500-A datasheet
+uint16_t maxOutputCount = 14745;    // at specified maximum pressure (i.e. 1500 millibars) see AMS5915-1500-A datasheet
+const float _mBar2Pa = 100.0f;      // conversion millibar to PA
+
+void setup() 
+{
+  Serial.begin(9600);
+  Wire.begin();                             // Adjust Wire (here and below) if necessary : Wire, Wire1, Wire2...
+  Wire.setClock(400000);                    // i2c bus frequency
+ for (size_t i=0; i < _maxAttempts; i++)    // checking to see if we can talk with the sensor
+  {
+    statusCapteur = readSensorCounts(&_pressureCounts,&_temperatureCounts);
+    if (statusCapteur > 0) {break;}
+    delay(10);
+  }
+
+if (statusCapteur < 0) 
+  {
+    Serial.print("An error occured when communicating with the AMS5915-1500-A sensor. Check wiring, pull up resistors, I2C address, and I2C bus number (wire, wire1, wire2...)");
+    while(1){}
+  }
+}
+
+void loop() 
+{
+  delay(100);
+  readSensorUnits();
+  absolutePressure = IIRFilteredValue (previousFilteredAbsolutePressure, absolutePressure , 0.05); // IIR filter is applied 
+  previousFilteredAbsolutePressure = absolutePressure;  
+  Serial.print ("Filtered absolute presure : "); 
+  Serial.print (absolutePressure,0); // When the sensor is connected to ambient pressure, it should be equal to local QNH, corrected for altitude above mean sea level
+  Serial.print (" Pa");
+  Serial.print ("        Temp : "); 
+  Serial.print (Temp_C,1); 
+  Serial.print (" °C");
+}
+
+int readSensorUnits()  // reads data from the sensor and returns values in units of Pascals and °C
+{
+  statusCapteur = readSensorCounts(&_pressureCounts,&_temperatureCounts);                                                                                          // get pressure and temperature counts off transducer
+  absolutePressure = (((float)(_pressureCounts - minOutputCount))/(((float)(maxOutputCount - minOutputCount))/((float)(_pMax - _pMin)))+(float)_pMin)*_mBar2Pa;    // convert counts to pressure, PA
+  Temp_C = (float)((_temperatureCounts*200))/2048.0f-50.0f;                                                                                                        // convert counts to temperature, C
+  return statusCapteur;
+}
+
+int readSensorCounts(uint16_t * pressureCounts,uint16_t * temperatureCounts)   // reads pressure and temperature and returns values in counts
+{ 
+  numBytes = Wire.requestFrom(0x28,sizeof(bufferI2C));                         // read from sensor. Adjust I2C address if necessary
+  if (numBytes == sizeof(bufferI2C))                                           // put the data in buffer
+  {
+    bufferI2C[0] = Wire.read(); 
+    bufferI2C[1] = Wire.read();
+    bufferI2C[2] = Wire.read();
+    bufferI2C[3] = Wire.read();
+    *pressureCounts = (((uint16_t) (bufferI2C[0]&0x3F)) <<8) + (((uint16_t) bufferI2C[1]));            // assemble into a uint16_t
+    *temperatureCounts = (((uint16_t) (bufferI2C[2])) <<3) + (((uint16_t) bufferI2C[3]&0xE0)>>5);
+
+    filteredPressureCount = IIRFilteredValue (previousFilteredPressureCount, *pressureCounts , 0.1); // IIR filter is applied 
+    previousFilteredPressureCount = filteredPressureCount;
+    
+    Serial.print ("        Counts : "); 
+    Serial.print(*pressureCounts);  
+    Serial.print ("        Filtered counts : "); 
+    Serial.println(filteredPressureCount,0);                      // when absolutePressure is zero (very difficult to obtain...), should be as close as possible to minOutputCount (1638)
+    statusCapteur = 1;
+  } 
+  else 
+  {
+    statusCapteur = -1;
+  }
+  return statusCapteur;
+}
+
+//  Infinite Impulse Response Filter function (IIR filter)
+float IIRFilteredValue (float previousFilteredValue, float currentValue , float IIRFilterCoeff)
+{
+  return previousFilteredValue  * (1-IIRFilterCoeff) + currentValue * IIRFilterCoeff ;
+}
